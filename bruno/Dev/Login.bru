@@ -1,0 +1,21 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/dev/token
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@library.local"
+  }
+}
+
+vars:post-response {
+  jwt: res.body.token
+}

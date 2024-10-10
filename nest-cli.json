@@ -1,5 +1,76 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "@app/books",
+  "monorepo": true,
+  "root": "apps/books",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/books/tsconfig.app.json"
+  },
+  "projects": {
+    "books": {
+      "type": "application",
+      "root": "apps/books",
+      "entryFile": "main",
+      "sourceRoot": "apps/books/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/books/tsconfig.app.json"
+      }
+    },
+    "users": {
+      "type": "application",
+      "root": "apps/users",
+      "entryFile": "main",
+      "sourceRoot": "apps/users/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/users/tsconfig.app.json"
+      }
+    },
+    "auth": {
+      "type": "library",
+      "root": "libs/auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth/tsconfig.lib.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "messenger-clients": {
+      "type": "library",
+      "root": "libs/messenger-clients",
+      "entryFile": "index",
+      "sourceRoot": "libs/messenger-clients/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/messenger-clients/tsconfig.lib.json"
+      }
+    },
+    "test-utils": {
+      "type": "library",
+      "root": "libs/test-utils",
+      "entryFile": "index",
+      "sourceRoot": "libs/test-utils/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/test-utils/tsconfig.lib.json"
+      }
+    },
+    "otel": {
+      "type": "library",
+      "root": "libs/otel",
+      "entryFile": "index",
+      "sourceRoot": "libs/otel/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/otel/tsconfig.lib.json"
+      }
+    }
+  }
 }

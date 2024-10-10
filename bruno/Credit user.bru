@@ -1,0 +1,22 @@
+meta {
+  name: Credit user
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3000/users
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt}}
+}
+
+body:json {
+  {
+    "id": "{{userId}}",
+    "amount": 300
+  }
+}

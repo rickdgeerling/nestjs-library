@@ -16,6 +16,50 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/users": [
+        "apps/users/src"
+      ],
+      "@app/users/*": [
+        "apps/users/src/*"
+      ],
+      "@app/books": [
+        "apps/books/src"
+      ],
+      "@app/books/*": [
+        "apps/books/src/*"
+      ],
+      "@lib/auth": [
+        "libs/auth/src"
+      ],
+      "@lib/auth/*": [
+        "libs/auth/src/*"
+      ],
+      "@lib/shared": [
+        "libs/shared/src"
+      ],
+      "@lib/shared/*": [
+        "libs/shared/src/*"
+      ],
+      "@lib/messenger-clients": [
+        "libs/messenger-clients/src"
+      ],
+      "@lib/messenger-clients/*": [
+        "libs/messenger-clients/src/*"
+      ],
+      "@lib/test-utils": [
+        "libs/test-utils/src"
+      ],
+      "@lib/test-utils/*": [
+        "libs/test-utils/src/*"
+      ],
+      "@lib/otel": [
+        "libs/otel/src"
+      ],
+      "@lib/otel/*": [
+        "libs/otel/src/*"
+      ]
+    }
   }
 }

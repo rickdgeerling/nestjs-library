@@ -1,0 +1,19 @@
+meta {
+  name: Get user
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/users/self
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt}}
+}
+
+vars:post-response {
+  userId: res.body.id
+}
