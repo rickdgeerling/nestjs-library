@@ -6,6 +6,10 @@ x-common-env: &common-env
   DB_PASSWORD: ${DB_PASSWORD}
   DB_HOST: 'db'
   DB_PORT: ${DB_PORT}
+  OTEL_DEBUG: 'false'
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: 'http://otel-collector:4317'
+  OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: 'http://otel-collector:4317'
+  OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: 'http://otel-collector:4317'
 
 services:
   nats:
@@ -41,6 +45,7 @@ services:
       - redis
       - db
     environment:
+      SERVICE_NAME: 'users'
       <<: [ *common-env ]
 
   books:
@@ -62,8 +67,67 @@ services:
       - redis
       - db
     environment:
+      SERVICE_NAME: 'books'
       <<: [ *common-env ]
+
+  k6:
+    image: grafana/k6:latest
+    command:
+      - run
+      - /opt/browse-books.js
+    volumes:
+      - ./k6:/opt
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+
+  grafana:
+    # Default credentials are `admin:admin`
+    image: grafana/grafana-oss:11.2.2
+    ports:
+      - '3030:3000'
+    volumes:
+      - './infra/grafana:/etc/grafana'
+    depends_on:
+      - prometheus
+      - otel-collector
+      - tempo
+      - loki
+
+  prometheus:
+    image: bitnami/prometheus:2
+    ports:
+      - '9090:9090'
+    command:
+      - '--web.enable-remote-write-receiver'
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    volumes:
+      - ./infra/prometheus/:/etc/prometheus/
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.111.0
+    command: [ --config=/etc/otel-collector-config.yaml ]
+    volumes:
+      - ./infra/opentelemetry/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - 8080:8889
+    depends_on:
+      - prometheus
+      - tempo
+
+  tempo:
+    image: grafana/tempo:2.6.0
+    command: [ -config.file=/conf/tempo.yaml ]
+    volumes:
+      - ./infra/tempo:/conf
+
+  loki:
+    image: grafana/loki:3.2.0
+    command: [ '-config.file=/conf/loki.yaml' ]
+    volumes:
+      - ./infra/loki:/conf
 
 volumes:
   node_modules:
-

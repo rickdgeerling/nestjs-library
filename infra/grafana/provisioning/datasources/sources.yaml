@@ -1,0 +1,19 @@
+# Configuration file version
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    uid: 'b1419ea6-1a2d-49aa-9025-d61769dffbc8'
+    url: http://prometheus:9090
+  - name: Loki
+    type: loki
+    uid: 'eb3f6a3b-f6c6-4fc6-9b3a-9d4b4d359c4a'
+    url: http://loki:3100
+  - name: Tempo
+    type: tempo
+    url: http://tempo:3100
+    uid: 'd9038629-3f4d-4e4c-8c89-edbdaa9755b7'
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: 'b1419ea6-1a2d-49aa-9025-d61769dffbc8'

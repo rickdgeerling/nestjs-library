@@ -1,0 +1,66 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otelcol'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['127.0.0.1:8888']
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: '.*grpc_io.*'
+              action: drop
+
+exporters:
+  prometheus:
+    endpoint: '0.0.0.0:8889'
+
+  debug:
+
+  otlp:
+    endpoint: 'tempo:4317'
+    tls:
+      insecure: true
+
+  otlphttp:
+    endpoint: http://loki:3100/otlp
+
+processors:
+  batch:
+  transform:
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["service_name"], resource.attributes["service.name"])
+          - set(attributes["service_version"], resource.attributes["service.version"])
+  tail_sampling:
+    decision_wait: 10
+    policies:
+      - name: always-sample-errors
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+      - name: probabilistic-policy
+        type: probabilistic
+        probabilistic:
+          # Probably want to set this to something more reasonable
+          sampling_percentage: 100
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [transform]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [otlphttp]

@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 5s # By default, scrape targets every 5 seconds.
+
+# A scrape configuration containing exactly one endpoint to scrape:
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: otel-collector
+    static_configs:
+      - targets: ['otel-collector:8889'] # using the name of the OpenTelemetryCollector container defined in the docker compose file

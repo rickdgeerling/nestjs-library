@@ -1,0 +1,46 @@
+multitenancy_enabled: false
+usage_report:
+  reporting_enabled: false
+compactor:
+  compaction:
+    block_retention: 4h
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+metrics_generator:
+  processor:
+    service_graphs:
+      max_items: 10000
+      workers: 10
+    span_metrics:
+      intrinsic_dimensions:
+        service: true
+  registry:
+    collection_interval: 15s
+  storage:
+    path: /var/tempo/wal
+    remote_write:
+      - url: http://prometheus:9090/api/v1/write
+        send_exemplars: true
+
+ingester:
+  flush_all_on_shutdown: true
+server:
+  http_listen_port: 3100
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/traces
+    wal:
+      path: /var/tempo/wal
+querier: {}
+query_frontend: {}
+overrides:
+  per_tenant_override_config: /conf/overrides.yaml
+  metrics_generator_processors:
+    - span-metrics
+    - service-graphs
