@@ -1,5 +1,10 @@
+import { Trace } from '@lib/otel';
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { OnApplicationBootstrap } from '@nestjs/common';
+import {
+  SEMATTRS_MESSAGING_DESTINATION,
+  SEMATTRS_MESSAGING_SYSTEM,
+} from '@opentelemetry/semantic-conventions';
 import { Queue } from 'bullmq';
 import { UsersService } from './users.service';
 
@@ -17,6 +22,13 @@ export class ScanOverdueUsersWorker
     super();
   }
 
+  @Trace({
+    name: SCAN_OVERDUE_USERS_QUEUE_NAME,
+    attributes: {
+      [SEMATTRS_MESSAGING_SYSTEM]: 'bullmq',
+      [SEMATTRS_MESSAGING_DESTINATION]: SCAN_OVERDUE_USERS_QUEUE_NAME,
+    },
+  })
   async process() {
     await this.usersService.scanOverdueUsers();
   }

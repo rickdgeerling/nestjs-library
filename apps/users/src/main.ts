@@ -1,3 +1,4 @@
+import '@lib/otel/init';
 import { NATS_OPTIONS } from '@lib/shared';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
