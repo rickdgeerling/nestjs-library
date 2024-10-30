@@ -15,6 +15,9 @@ receivers:
               regex: '.*grpc_io.*'
               action: drop
 
+  redis:
+    endpoint: 'redis:6379'
+
 exporters:
   prometheus:
     endpoint: '0.0.0.0:8889'
@@ -57,7 +60,7 @@ service:
       processors: []
       exporters: [otlp]
     metrics:
-      receivers: [otlp]
+      receivers: [redis, otlp]
       processors: [transform]
       exporters: [prometheus]
     logs:

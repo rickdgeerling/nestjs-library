@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { OpenTelemetryInterceptor } from './otel.interceptor';
+import { RuntimeMetricsService } from './runtime.metrics';
 
 @Module({
   providers: [
@@ -8,6 +9,7 @@ import { OpenTelemetryInterceptor } from './otel.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: OpenTelemetryInterceptor,
     },
+    RuntimeMetricsService,
   ],
 })
 export class OtelModule {}
